@@ -706,7 +706,7 @@
                 <div class="role-selector">
                     <button class="role-btn active" onclick="setRole('estudante', this)">Estudante</button>
                     <button class="role-btn" onclick="setRole('gestao', this)">Gestão</button>
-                    <button class="role-btn" onclick="setRole('psicologia', this)">Psicologo(a)</button>
+                    <button class="role-btn" onclick="setRole('psicologo', this)">Psicologo(a)</button>
                 </div>
 
                 <form id="loginForm">
@@ -839,7 +839,7 @@ if (dados.sucesso) {
     // Redirecionar
     let paginaDestino = 'inicial.html';
     if (tipoUsuarioSelecionado === 'gestao') paginaDestino = 'inicio-escola.html';
-    else if (tipoUsuarioSelecionado === 'psicologia') paginaDestino = 'inicial-psicologa.html';
+    else if (tipoUsuarioSelecionado === 'psicologo') paginaDestino = 'inicial-psicologa.html';
     
     setTimeout(() => {
         window.location.href = paginaDestino;
