@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindfine - Sala de Jogos</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    :root {
+        --azul-bright: #32B5F1;
+        --azul-escuro: #0277bd;
+    }
+
+    body, html {
+        margin: 0; padding: 0;
+        height: 100%; 
+        overflow: hidden; 
+        font-family: 'Montserrat', sans-serif;
+        background: #000;
+    }
+
+    .background-layer {
+        position: fixed; width: 110%; height: 110%;
+        background-image: url('fundos/fundo-a.png'); 
+        background-size: cover; background-position: center;
+        z-index: 1; left: -5%; top: -5%;
+        filter: blur(8px) brightness(0.6);
+    }
+
+    .main-content {
+        position: relative; 
+        z-index: 10;
+        height: 100vh; 
+        display: flex; 
+        flex-direction: column;
+    }
+
+    /* HEADER FIXO NO TOPO */
+    .diary-header {
+        background: white; 
+        padding: 15px 20px;
+        display: flex; 
+        align-items: center; 
+        gap: 15px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+        z-index: 500;
+        flex-shrink: 0;
+    }
+    
+    .header-left { display: flex; align-items: center; gap: 15px; flex-grow: 1; }
+    .back-btn { color: var(--azul-bright); font-size: 1.2rem; cursor: pointer; border: none; background: none; text-decoration: none; }
+    .diary-title h2 { margin: 0; font-size: 1rem; color: var(--azul-escuro); font-weight: 800; text-transform: uppercase; }
+
+    /* √ÅREA DE JOGOS COM SCROLL INDEPENDENTE */
+    .games-container {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 20px 0 40px 0; /* Padding reduzido pois n√£o h√° mais navbar */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .games-area {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        width: 90%;
+        max-width: 500px;
+    }
+
+    /* CARDS */
+    .game-card {
+        background: white; 
+        border-radius: 20px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        text-decoration: none; 
+        display: flex; 
+        flex-direction: column; 
+        overflow: hidden;
+        transition: 0.3s ease;
+        animation: fadeIn 0.5s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } }
+    .game-card:hover { transform: translateY(-5px); }
+    
+    .game-img-container {
+        width: 100%;
+        height: 110px;
+        background: #f0f0f0;
+        overflow: hidden;
+    }
+
+    .game-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.5s ease;
+    }
+
+    .game-card:hover .game-img { transform: scale(1.1); }
+
+    .game-info {
+        padding: 12px 10px;
+        text-align: center;
+    }
+
+    .game-card strong { 
+        display: block;
+        font-size: 0.85rem; 
+        font-weight: 800; 
+        color: var(--azul-escuro); 
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+    
+    .game-card p { 
+        font-size: 0.65rem; 
+        color: #666; 
+        margin: 0; 
+        line-height: 1.2; 
+    }
+
+    /* PART√çCULAS */
+    #particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+    .bubble { position: absolute; bottom: -20px; background: rgba(255,255,255,0.2); border-radius: 50%; animation: rise linear forwards; }
+    @keyframes rise { to { transform: translateY(-110vh); opacity: 0; } }
+
+    @media (min-width: 500px) {
+        .games-area { grid-template-columns: repeat(3, 1fr); max-width: 700px; }
+    }
+
+
+
+@media (max-width: 480px) {
+    .kpi-strip, .stats-grid { grid-template-columns: 1fr !important; }
+    .page-header { padding: 15px; }
+    .page-title { font-size: 18px; }
+    .kpi-value, .stat-value { font-size: 18px !important; }
+}
+
+/* ========== LAYOUT RESPONSIVO COMPLETO PARA MOBILE ========== */
+
+/* Reset para mobile */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Viewport j· deve estar configurado */
+/* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"> */
+
+@media (max-width: 768px) {
+    
+    /* ---------- GERAL ---------- */
+    body {
+        overflow-x: hidden;
+        font-size: 14px;
+    }
+    
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 75%;
+        max-width: 280px;
+        height: 100vh;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+    }
+    
+    .sidebar.open {
+        left: 0;
+    }
+    
+    /* Bot„o hamb˙rguer */
+    .menu-toggle {
+        display: flex !important;
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 1001;
+        background: #32B5F1;
+        border: none;
+        border-radius: 12px;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        cursor: pointer;
+        color: white;
+    }
+    
+    .menu-toggle i {
+        width: 24px;
+        height: 24px;
+        stroke-width: 2;
+    }
+    
+    /* ---------- CONTE⁄DO PRINCIPAL ---------- */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 70px 16px 30px !important;
+        width: 100% !important;
+        overflow-x: hidden;
+    }
+    
+    /* ---------- HEADER ---------- */
+    .page-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 16px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .header-left h1 {
+        font-size: 22px !important;
+        word-break: break-word;
+    }
+    
+    .header-left p {
+        font-size: 12px !important;
+    }
+    
+    .header-right {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* ---------- BOT’ES ---------- */
+    .btn-primary, .btn-ghost {
+        padding: 12px 16px !important;
+        font-size: 14px !important;
+        min-height: 44px;
+        width: auto;
+    }
+    
+    /* ---------- KPIs / CARDS ---------- */
+    .kpi-strip, .stats-grid, .summary-strip {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .kpi-card, .stat-card, .summary-chip {
+        padding: 16px !important;
+        border-radius: 16px !important;
+    }
+    
+    .kpi-value, .stat-value, .chip-value {
+        font-size: 24px !important;
+    }
+    
+    .kpi-label, .stat-label, .chip-label {
+        font-size: 10px !important;
+    }
+    
+    /* ---------- INPUTS E FORMUL¡RIOS ---------- */
+    input, 
+    select, 
+    textarea,
+    .input-field,
+    .form-input,
+    .form-select,
+    .form-textarea {
+        font-size: 16px !important;
+        padding: 14px !important;
+        min-height: 48px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    
+    /* ---------- LOGIN ---------- */
+    .split-screen {
+        flex-direction: column !important;
+    }
+    
+    .left-side {
+        min-height: 200px !important;
+        padding: 20px !important;
+    }
+    
+    .right-side {
+        padding: 30px 20px !important;
+    }
+    
+    .login-container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .login-container .app-name {
+        font-size: 28px !important;
+    }
+    
+    .login-btn {
+        min-height: 52px !important;
+        font-size: 16px !important;
+        border-radius: 14px !important;
+    }
+    
+    /* ---------- TURMAS ---------- */
+    .classes-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    
+    .class-card {
+        border-radius: 16px !important;
+    }
+    
+    .class-card .card-body {
+        padding: 16px !important;
+    }
+    
+    /* ---------- ALERTAS ---------- */
+    .alert-card-inner {
+        flex-direction: column !important;
+        padding: 16px !important;
+    }
+    
+    .alert-left {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        margin-bottom: 12px;
+    }
+    
+    .alert-time-col {
+        width: 100% !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #eee;
+    }
+    
+    .alert-meta {
+        flex-wrap: wrap;
+    }
+    
+    .alert-actions {
+        flex-direction: row;
+    }
+    
+    /* ---------- INTERVEN«’ES (KANBAN) ---------- */
+    .kanban-board {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    
+    .kanban-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .kanban-header .search-box {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+    
+    .kanban-header .filter-pill {
+        text-align: center;
+        flex: 1;
+    }
+    
+    /* ---------- TOOLBAR/FILTROS ---------- */
+    .toolbar, .filters-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 16px !important;
+        gap: 12px !important;
+    }
+    
+    .search-box {
+        width: 100% !important;
+        padding: 10px 14px !important;
+    }
+    
+    .search-box input {
+        font-size: 16px !important;
+    }
+    
+    .filter-pill, .filter-chip, .view-btn {
+        justify-content: center;
+        text-align: center;
+        flex: 1;
+    }
+    
+    .filter-group {
+        width: 100%;
+    }
+    
+    .filter-select {
+        width: 100%;
+    }
+    
+    /* ---------- MODAL ---------- */
+    .modal-overlay {
+        align-items: flex-end !important;
+    }
+    
+    .modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        border-radius: 20px 20px 0 0 !important;
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+        padding: 20px !important;
+    }
+    
+    /* ---------- HEATMAP ---------- */
+    .heatmap-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+    
+    .heatmap-cell {
+        padding: 12px 8px !important;
+    }
+    
+    .heatmap-cell .hc-score {
+        font-size: 20px !important;
+    }
+    
+    /* ---------- TABELAS ---------- */
+    .curso-table,
+    .curso-table tbody,
+    .curso-table tr,
+    .curso-table td {
+        display: block;
+        width: 100%;
+    }
+    
+    .curso-table thead {
+        display: none;
+    }
+    
+    .curso-table tr {
+        margin-bottom: 12px;
+        padding: 12px;
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+    
+    .curso-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0 !important;
+        border: none !important;
+    }
+    
+    .curso-table td:before {
+        content: attr(data-label);
+        font-weight: 800;
+        font-size: 11px;
+        color: #64748b;
+        text-transform: uppercase;
+    }
+    
+    /* ---------- CHART / GR¡FICOS ---------- */
+    .emotion-row {
+        flex-wrap: wrap;
+    }
+    
+    .bar-container {
+        min-width: 100px;
+    }
+    
+    /* ---------- PAINEL LATERAL ---------- */
+    .side-panel {
+        margin-top: 20px;
+    }
+    
+    .card {
+        padding: 16px !important;
+        border-radius: 16px !important;
+    }
+    
+    .card-title {
+        font-size: 14px !important;
+    }
+    
+    /* ---------- RESPONS¡VEIS ---------- */
+    .resp-row {
+        flex-wrap: wrap;
+    }
+    
+    .resp-count {
+        margin-left: auto;
+    }
+    
+    /* ---------- TIMELINE ---------- */
+    .timeline {
+        padding-left: 8px;
+    }
+    
+    .tl-content {
+        flex: 1;
+    }
+    
+    /* ---------- RODAP… ---------- */
+    .sidebar-footer {
+        padding-bottom: 20px;
+    }
+}
+
+/* Para telas muito pequenas (menos de 400px) */
+@media (max-width: 480px) {
+    .kpi-strip, .stats-grid, .summary-strip {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .page-title {
+        font-size: 20px !important;
+    }
+    
+    .heatmap-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .btn-primary, .btn-ghost {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .alert-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .alert-actions button {
+        width: 100%;
+        margin: 4px 0;
+    }
+}
+
+/* Garantir que inputs n„o faÁam zoom no iOS */
+@supports (-webkit-touch-callout: none) {
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="background-layer"></div>
+<div id="particles-container"></div>
+
+<div class="main-content">
+    <header class="diary-header">
+        <div class="header-left">
+            <a href="inicial.html" class="back-btn"><i class="fas fa-chevron-left"></i></a>
+            <div class="diary-title">
+                <h2>Sala de Jogos</h2>
+            </div>
+        </div>
+        <i class="fas fa-gamepad" style="color: var(--azul-bright); font-size: 1.2rem;"></i>
+    </header>
+
+    <div class="games-container">
+        <div class="games-area" id="gamesList">
+            <!-- Cards gerados via JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const gamesData = [
+        { nome: 'Mem√≥ria', desc: 'Treine sua mem√≥ria.', imagem: 'jogos/jogo-memoria.png', link: 'Jogo-Memoria.html' },
+        { nome: 'Externaliza√ß√£o', desc: 'Liberte o que sente.', imagem: 'jogos/jogo.png', link: 'jogo-externalizacao.html' },
+        { nome: 'Pop It', desc: 'Estoure bolhas.', imagem: 'jogos/bolhas.png', link: 'jogo-booble.html' },
+        { nome: 'Jogo da Velha', desc: 'L√≥gica e equil√≠brio.', imagem: 'jogos/velha.png', link: 'jogo-da-velha.html' },
+        { nome: 'Arte', desc: 'Crie sua pr√≥pria paz.', imagem: 'jogos/canva.png', link: 'jogo-desenho.html' },
+        { nome: 'Flypp-Panda', desc: 'Voe com leveza.', imagem: 'jogos/jogo2.png', link: 'jogo-flypp-panda.html' },
+        { nome: 'Ca√ßa palavras', desc: 'Encontre clareza.', imagem: 'jogos/caca.jpg', link: 'jogo-caca-palavras.html' }
+    ];
+
+    function renderGames() {
+        const container = document.getElementById('gamesList');
+        container.innerHTML = gamesData.map(game => `
+            <a href="${game.link}" class="game-card">
+                <div class="game-img-container">
+                    <img src="${game.imagem}" alt="${game.nome}" class="game-img">
+                </div>
+                <div class="game-info">
+                    <strong>${game.nome}</strong>
+                    <p>${game.desc}</p>
+                </div>
+            </a>
+        `).join('');
+    }
+
+    function createBubble() {
+        const container = document.getElementById('particles-container');
+        const b = document.createElement('div');
+        b.className = 'bubble';
+        const size = Math.random() * 20 + 5;
+        b.style.width = size + 'px'; b.style.height = size + 'px';
+        b.style.left = Math.random() * 100 + '%';
+        b.style.animationDuration = (Math.random() * 5 + 8) + 's';
+        container.appendChild(b);
+        setTimeout(() => b.remove(), 10000);
+    }
+
+    setInterval(createBubble, 1500);
+    renderGames();
+</script>
+
+</body>
+</html>

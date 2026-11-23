@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindfine - Login</title>
+    <style>
+        :root {
+            --azul-primario: #29b6f6;
+            --azul-claro: #4fc3f7;
+            --azul-escuro: #0d47a1;
+            --azul-neon: #00d4ff;
+            --bg-page: #f0faff;
+            --glass: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(41, 182, 246, 0.35);
+            --texto-escuro: #0a192f;
+            --texto-suave: #546e7a;
+            --sombra: 0 10px 25px rgba(41, 182, 246, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f0faff;
+        }
+
+        .split-screen {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .left-side {
+            flex: 1;
+            background-image: url(fundos/fundo-a.png);
+            background-position:center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+             background-repeat: no-repeat;
+             
+        }
+
+        .left-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            margin-top: -60px;
+            transition: all 0.4s ease;
+        }
+
+        .bubbles {
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            backdrop-filter: blur(3px);
+            animation: rise 10s infinite ease-in;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            15% { opacity: 0.4; }
+            100% { transform: translateY(-1200px) scale(1.3); opacity: 0; }
+        }
+
+        .mascot-container {
+            width: 420px;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1));
+            transition: all 0.4s ease-in-out;
+            margin-bottom: -20px;
+        }
+
+        .brand-text {
+            text-align: center;
+        }
+
+        .brand-text h2 {
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px var(--azul-neon), 0 0 20px var(--azul-neon);
+        }
+
+        .brand-text p {
+            font-size: 17px;
+            opacity: 0.95;
+            letter-spacing: 0.8px;
+            font-weight: 400;
+            text-shadow: 0 0 5px var(--azul-neon);
+        }
+
+        .right-side {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 40px;
+            z-index: 3;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .app-name {
+            font-size: 34px;
+            font-weight: 700;
+            color: #29b6f6;
+            text-align: center;
+            margin-bottom: 35px;
+            letter-spacing: -0.5px;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 32px;
+            background: #f1f3f4;
+            padding: 6px;
+            border-radius: 15px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 13px 8px;
+            border: none;
+            border-radius: 11px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #546e7a;
+            background: transparent;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .role-btn.active {
+            background: white;
+            color: #29b6f6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .input-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #37474f;
+            margin-bottom: 9px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid #edf2f4;
+            border-radius: 14px;
+            font-size: 15px;
+            background: #fafafa;
+            transition: 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #4fc3f7;
+            background: white;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 44px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #90a4ae;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+            padding: 4px;
+        }
+
+        .login-btn {
+            display: block;
+            width: 100%;
+            padding: 17px;
+            background-color: #29b6f6;
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 12px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(41, 182, 246, 0.4);
+        }
+
+        .login-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .mensagem {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .mensagem.erro {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+
+        .mensagem.sucesso {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #66bb6a;
+        }
+
+        
+    
+
+
+@media (max-width: 480px) {
+    .kpi-strip, .stats-grid { grid-template-columns: 1fr !important; }
+    .page-header { padding: 15px; }
+    .page-title { font-size: 18px; }
+    .kpi-value, .stat-value { font-size: 18px !important; }
+}
+
+/* ========== LAYOUT RESPONSIVO COMPLETO PARA MOBILE ========== */
+
+/* Reset para mobile */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Viewport j· deve estar configurado */
+/* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"> */
+
+@media (max-width: 768px) {
+    
+    /* ---------- GERAL ---------- */
+    body {
+        overflow-x: hidden;
+        font-size: 14px;
+    }
+    
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 75%;
+        max-width: 280px;
+        height: 100vh;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+    }
+    
+    .sidebar.open {
+        left: 0;
+    }
+    
+    /* Bot„o hamb˙rguer */
+    .menu-toggle {
+        display: flex !important;
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 1001;
+        background: #32B5F1;
+        border: none;
+        border-radius: 12px;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        cursor: pointer;
+        color: white;
+    }
+    
+    .menu-toggle i {
+        width: 24px;
+        height: 24px;
+        stroke-width: 2;
+    }
+    
+    /* ---------- CONTE⁄DO PRINCIPAL ---------- */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 70px 16px 30px !important;
+        width: 100% !important;
+        overflow-x: hidden;
+    }
+    
+    /* ---------- HEADER ---------- */
+    .page-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 16px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .header-left h1 {
+        font-size: 22px !important;
+        word-break: break-word;
+    }
+    
+    .header-left p {
+        font-size: 12px !important;
+    }
+    
+    .header-right {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* ---------- BOT’ES ---------- */
+    .btn-primary, .btn-ghost {
+        padding: 12px 16px !important;
+        font-size: 14px !important;
+        min-height: 44px;
+        width: auto;
+    }
+    
+    /* ---------- KPIs / CARDS ---------- */
+    .kpi-strip, .stats-grid, .summary-strip {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .kpi-card, .stat-card, .summary-chip {
+        padding: 16px !important;
+        border-radius: 16px !important;
+    }
+    
+    .kpi-value, .stat-value, .chip-value {
+        font-size: 24px !important;
+    }
+    
+    .kpi-label, .stat-label, .chip-label {
+        font-size: 10px !important;
+    }
+    
+    /* ---------- INPUTS E FORMUL¡RIOS ---------- */
+    input, 
+    select, 
+    textarea,
+    .input-field,
+    .form-input,
+    .form-select,
+    .form-textarea {
+        font-size: 16px !important;
+        padding: 14px !important;
+        min-height: 48px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    
+    /* ---------- LOGIN ---------- */
+    .split-screen {
+        flex-direction: column !important;
+    }
+    
+    .left-side {
+        min-height: 200px !important;
+        padding: 20px !important;
+    }
+    
+    .right-side {
+        padding: 30px 20px !important;
+    }
+    
+    .login-container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .login-container .app-name {
+        font-size: 28px !important;
+    }
+    
+    .login-btn {
+        min-height: 52px !important;
+        font-size: 16px !important;
+        border-radius: 14px !important;
+    }
+    
+    /* ---------- TURMAS ---------- */
+    .classes-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    
+    .class-card {
+        border-radius: 16px !important;
+    }
+    
+    .class-card .card-body {
+        padding: 16px !important;
+    }
+    
+    /* ---------- ALERTAS ---------- */
+    .alert-card-inner {
+        flex-direction: column !important;
+        padding: 16px !important;
+    }
+    
+    .alert-left {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        margin-bottom: 12px;
+    }
+    
+    .alert-time-col {
+        width: 100% !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #eee;
+    }
+    
+    .alert-meta {
+        flex-wrap: wrap;
+    }
+    
+    .alert-actions {
+        flex-direction: row;
+    }
+    
+    /* ---------- INTERVEN«’ES (KANBAN) ---------- */
+    .kanban-board {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    
+    .kanban-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .kanban-header .search-box {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+    
+    .kanban-header .filter-pill {
+        text-align: center;
+        flex: 1;
+    }
+    
+    /* ---------- TOOLBAR/FILTROS ---------- */
+    .toolbar, .filters-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 16px !important;
+        gap: 12px !important;
+    }
+    
+    .search-box {
+        width: 100% !important;
+        padding: 10px 14px !important;
+    }
+    
+    .search-box input {
+        font-size: 16px !important;
+    }
+    
+    .filter-pill, .filter-chip, .view-btn {
+        justify-content: center;
+        text-align: center;
+        flex: 1;
+    }
+    
+    .filter-group {
+        width: 100%;
+    }
+    
+    .filter-select {
+        width: 100%;
+    }
+    
+    /* ---------- MODAL ---------- */
+    .modal-overlay {
+        align-items: flex-end !important;
+    }
+    
+    .modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        border-radius: 20px 20px 0 0 !important;
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+        padding: 20px !important;
+    }
+    
+    /* ---------- HEATMAP ---------- */
+    .heatmap-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+    
+    .heatmap-cell {
+        padding: 12px 8px !important;
+    }
+    
+    .heatmap-cell .hc-score {
+        font-size: 20px !important;
+    }
+    
+    /* ---------- TABELAS ---------- */
+    .curso-table,
+    .curso-table tbody,
+    .curso-table tr,
+    .curso-table td {
+        display: block;
+        width: 100%;
+    }
+    
+    .curso-table thead {
+        display: none;
+    }
+    
+    .curso-table tr {
+        margin-bottom: 12px;
+        padding: 12px;
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+    
+    .curso-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0 !important;
+        border: none !important;
+    }
+    
+    .curso-table td:before {
+        content: attr(data-label);
+        font-weight: 800;
+        font-size: 11px;
+        color: #64748b;
+        text-transform: uppercase;
+    }
+    
+    /* ---------- CHART / GR¡FICOS ---------- */
+    .emotion-row {
+        flex-wrap: wrap;
+    }
+    
+    .bar-container {
+        min-width: 100px;
+    }
+    
+    /* ---------- PAINEL LATERAL ---------- */
+    .side-panel {
+        margin-top: 20px;
+    }
+    
+    .card {
+        padding: 16px !important;
+        border-radius: 16px !important;
+    }
+    
+    .card-title {
+        font-size: 14px !important;
+    }
+    
+    /* ---------- RESPONS¡VEIS ---------- */
+    .resp-row {
+        flex-wrap: wrap;
+    }
+    
+    .resp-count {
+        margin-left: auto;
+    }
+    
+    /* ---------- TIMELINE ---------- */
+    .timeline {
+        padding-left: 8px;
+    }
+    
+    .tl-content {
+        flex: 1;
+    }
+    
+    /* ---------- RODAP… ---------- */
+    .sidebar-footer {
+        padding-bottom: 20px;
+    }
+}
+
+/* Para telas muito pequenas (menos de 400px) */
+@media (max-width: 480px) {
+    .kpi-strip, .stats-grid, .summary-strip {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .page-title {
+        font-size: 20px !important;
+    }
+    
+    .heatmap-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .btn-primary, .btn-ghost {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .alert-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .alert-actions button {
+        width: 100%;
+        margin: 4px 0;
+    }
+}
+
+/* Garantir que inputs n„o faÁam zoom no iOS */
+@supports (-webkit-touch-callout: none) {
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+</style>
+</head>
+<body>
+
+    <div class="split-screen">
+        <div class="left-side">
+            <div class="bubbles" id="bubbleContainer"></div>
+
+            <div class="left-content-wrapper">
+                <img src="pandas/skin.png" alt="Mascote" class="mascot-container" id="pandaImg">
+                
+                <div class="brand-text">
+                    <h2>Mindfine</h2>
+                    <p>Cuidar da mente √© construir o futuro!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-side">
+            <div class="login-container">
+                <h1 class="app-name">Bem-vindo(a)!</h1>
+
+                <div id="mensagem" class="mensagem"></div>
+
+                <div class="role-selector">
+                    <button class="role-btn active" onclick="setRole('estudante', this)">Estudante</button>
+                    <button class="role-btn" onclick="setRole('gestao', this)">Gest√£o</button>
+                    <button class="role-btn" onclick="setRole('psicologia', this)">Psicologia</button>
+                </div>
+
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label class="input-label" id="userLabel">Matr√≠cula</label>
+                        <input type="text" id="identificador" class="input-field" placeholder="Digite seu acesso" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Senha</label>
+                        <input type="password" id="passwordField" class="input-field" placeholder="‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢" required>
+                        
+                        <button type="button" class="password-toggle" onclick="togglePassword()" id="toggleBtn">
+                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <button type="submit" class="login-btn" id="btnLogin">Entrar na conta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+// For√ßar nome correto
+let usuarioSalvo = JSON.parse(localStorage.getItem('usuario') || '{}');
+let finalUserName = usuarioSalvo.nome || "Usu√°rio";
+let matriculaAtual = usuarioSalvo.matricula || '';
+
+console.log('NOME DO USU√ÅRIO:', finalUserName);
+        let tipoUsuarioSelecionado = 'estudante';
+
+        // Gerar bolinhas
+        const bubbleContainer = document.getElementById('bubbleContainer');
+        for (let i = 0; i < 20; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 30 + 10 + 'px';
+            bubble.style.width = size;
+            bubble.style.height = size;
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDelay = Math.random() * 10 + 's';
+            bubble.style.animationDuration = Math.random() * 6 + 9 + 's';
+            bubbleContainer.appendChild(bubble);
+        }
+
+        function togglePassword() {
+            const passwordField = document.getElementById('passwordField');
+            const pandaImg = document.getElementById('pandaImg');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                pandaImg.src = "pandas/panda-curioso.png";
+                eyeIcon.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                `;
+            } else {
+                passwordField.type = "password";
+                pandaImg.src = "pandas/skin.png";
+                eyeIcon.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                `;
+            }
+        }
+
+        function setRole(role, element) {
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            tipoUsuarioSelecionado = role;
+            
+            const label = document.getElementById('userLabel');
+            if(role === 'estudante') label.innerText = "Matr√≠cula";
+            else if(role === 'gestao') label.innerText = "ID de Gestor";
+            else label.innerText = "CRP ou Email Profissional";
+        }
+
+        function mostrarMensagem(texto, tipo) {
+            const mensagem = document.getElementById('mensagem');
+            mensagem.textContent = texto;
+            mensagem.className = `mensagem ${tipo}`;
+            mensagem.style.display = 'block';
+            
+            setTimeout(() => {
+                mensagem.style.display = 'none';
+            }, 5000);
+        }
+
+        // Processar login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btnLogin = document.getElementById('btnLogin');
+            const identificador = document.getElementById('identificador').value;
+            const senha = document.getElementById('passwordField').value;
+            
+            btnLogin.disabled = true;
+            btnLogin.textContent = 'Entrando...';
+            
+            try {
+             // No login.html, a parte do fetch j√° est√° correta, mas vamos garantir:
+const resposta = await fetch('https://mindfine-backend.onrender.com/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        tipo_usuario: tipoUsuarioSelecionado,
+        identificador: identificador,
+        senha: senha
+    })
+});
+
+const dados = await resposta.json();
+
+if (dados.sucesso) {
+    mostrarMensagem('Login realizado com sucesso!', 'sucesso');
+    
+    localStorage.setItem('usuario', JSON.stringify({
+        nome: dados.nome,
+        email: dados.email,
+        matricula: dados.matricula,
+        tipo: dados.tipo
+    }));
+    
+    // Redirecionar
+    let paginaDestino = 'inicial.html';
+    if (tipoUsuarioSelecionado === 'gestao') paginaDestino = 'inicio-escola.html';
+    else if (tipoUsuarioSelecionado === 'psicologia') paginaDestino = 'inicial-psicologa.html';
+    
+    setTimeout(() => {
+        window.location.href = paginaDestino;
+    }, 1000);
+} else {
+    mostrarMensagem(dados.mensagem || 'Credenciais inv√°lidas', 'erro');
+}
+            } catch (erro) {
+                console.error('Erro:', erro);
+                mostrarMensagem('Erro ao conectar com o servidor. Verifique se est√° rodando!', 'erro');
+            } finally {
+                btnLogin.disabled = false;
+                btnLogin.textContent = 'Entrar na conta';
+            }
+        });
+    </script>
+</body>
+</html>

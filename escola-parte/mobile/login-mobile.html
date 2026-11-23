@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Mindfine - Login</title>
+    <style>
+        :root {
+            --azul-primario: #29b6f6;
+            --azul-claro: #4fc3f7;
+            --azul-escuro: #0d47a1;
+            --azul-neon: #00d4ff;
+            --bg-page: #f0faff;
+            --glass: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(41, 182, 246, 0.35);
+            --texto-escuro: #0a192f;
+            --texto-suave: #546e7a;
+            --sombra: 0 10px 25px rgba(41, 182, 246, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background-color: #f0faff;
+        }
+
+        .mobile-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .top-side {
+            background-image: url('../fundos/fundo-a.png');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bubbles {
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            backdrop-filter: blur(3px);
+            animation: rise 10s infinite ease-in;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            15% { opacity: 0.4; }
+            100% { transform: translateY(-1200px) scale(1.3); opacity: 0; }
+        }
+
+        .mascot-container {
+            width: 180px;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1));
+            margin-bottom: 16px;
+        }
+
+        .brand-text {
+            text-align: center;
+            z-index: 1;
+        }
+
+        .brand-text h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px var(--azul-neon), 0 0 20px var(--azul-neon);
+        }
+
+      .brand-text p {
+    font-size: 14px;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    color: #f0f9ff;
+    text-shadow: 0 0 6px #29b6f6, 0 0 3px #0288d1;
+}
+        .bottom-side {
+            background-color: #ffffff;
+            padding: 30px 24px;
+            border-radius: 30px 30px 0 0;
+            margin-top: -20px;
+            z-index: 3;
+            flex: 1;
+        }
+
+        .login-container {
+            width: 100%;
+        }
+
+        .app-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #29b6f6;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 28px;
+            background: #f1f3f4;
+            padding: 6px;
+            border-radius: 15px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            border-radius: 11px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #546e7a;
+            background: transparent;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .role-btn.active {
+            background: white;
+            color: #29b6f6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #37474f;
+            margin-bottom: 8px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #edf2f4;
+            border-radius: 14px;
+            font-size: 16px;
+            background: #fafafa;
+            transition: 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #4fc3f7;
+            background: white;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 42px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #90a4ae;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+        }
+
+        .login-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background-color: #29b6f6;
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 12px;
+        }
+
+        .login-btn:active {
+            transform: scale(0.98);
+            background-color: #0288d1;
+        }
+
+        .login-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .mensagem {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .mensagem.erro {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+
+        .mensagem.sucesso {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #66bb6a;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    .background-layer, #particles-container { z-index: 0 !important; } .main-content, .entries-area, .container, .card, .content-section { position: relative; z-index: 10 !important; } </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="top-side">
+            <div class="bubbles" id="bubbleContainer"></div>
+            <img src="../pandas/skin.png" alt="Mascote" class="mascot-container" id="pandaImg">
+            <div class="brand-text">
+                <h2>Mindfine</h2>
+                <p>Cuidar da mente é construir o futuro!</p>
+            </div>
+        </div>
+
+        <div class="bottom-side">
+            <div class="login-container">
+                <h1 class="app-name">Bem-vindo(a)!</h1>
+
+                <div id="mensagem" class="mensagem"></div>
+
+                <div class="role-selector">
+                    <button class="role-btn active" onclick="setRole('estudante', this)">Estudante</button>
+                    <button class="role-btn" onclick="setRole('gestao', this)">Gestão</button>
+                    <button class="role-btn" onclick="setRole('psicologia', this)">Psicologia</button>
+                </div>
+
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label class="input-label" id="userLabel">Matrícula</label>
+                        <input type="text" id="identificador" class="input-field" placeholder="Digite seu acesso" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Senha</label>
+                        <input type="password" id="passwordField" class="input-field" placeholder="••••••••" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <button type="submit" class="login-btn" id="btnLogin">Entrar na conta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       let tipoUsuarioSelecionado = 'estudante';
+
+const bubbleContainer = document.getElementById('bubbleContainer');
+for (let i = 0; i < 15; i++) {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    const size = Math.random() * 25 + 8 + 'px';
+    bubble.style.width = size;
+    bubble.style.height = size;
+    bubble.style.left = Math.random() * 100 + '%';
+    bubble.style.animationDelay = Math.random() * 10 + 's';
+    bubble.style.animationDuration = Math.random() * 6 + 9 + 's';
+    bubbleContainer.appendChild(bubble);
+}
+
+function togglePassword() {
+    const passwordField = document.getElementById('passwordField');
+    const pandaImg = document.getElementById('pandaImg');
+    
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        pandaImg.src = "../mobile/pandas/panda-curioso.png";
+    } else {
+        passwordField.type = "password";
+        pandaImg.src = "../pandas/skin.png";
+    }
+}
+
+function setRole(role, element) {
+    document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+    element.classList.add('active');
+    tipoUsuarioSelecionado = role;
+    
+    const label = document.getElementById('userLabel');
+    if(role === 'estudante') label.innerText = "Matrícula";
+    else if(role === 'gestao') label.innerText = "ID de Gestor";
+    else label.innerText = "CRP ou Email Profissional";
+}
+
+function mostrarMensagem(texto, tipo) {
+    const mensagem = document.getElementById('mensagem');
+    mensagem.textContent = texto;
+    mensagem.className = `mensagem ${tipo}`;
+    mensagem.style.display = 'block';
+    setTimeout(() => {
+        mensagem.style.display = 'none';
+    }, 5000);
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const btnLogin = document.getElementById('btnLogin');
+    const identificador = document.getElementById('identificador').value;
+    const senha = document.getElementById('passwordField').value;
+    
+    btnLogin.disabled = true;
+    btnLogin.innerHTML = '<div class="spinner"></div>';
+    
+    try {
+        const resposta = await fetch('https://mindfine-backend.onrender.com/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tipo_usuario: tipoUsuarioSelecionado,
+                identificador: identificador,
+                senha: senha
+            })
+        });
+
+        const dados = await resposta.json();
+
+        if (dados.sucesso) {
+            mostrarMensagem('Login realizado com sucesso!', 'sucesso');
+            
+            localStorage.setItem('usuario', JSON.stringify({
+                nome: dados.nome,
+                email: dados.email,
+                matricula: dados.matricula,
+                tipo: dados.tipo
+            }));
+            
+            let paginaDestino = '../mobile/inicial-mobile.html';
+            if (tipoUsuarioSelecionado === 'gestao') paginaDestino = '../mobile/inicio-escola-mobile.html';
+            else if (tipoUsuarioSelecionado === 'psicologia') paginaDestino = '../mobile/inicial-psicologa-mobile.html';
+            
+            setTimeout(() => {
+                window.location.href = paginaDestino;
+            }, 1500);
+        } else {
+            mostrarMensagem(dados.mensagem || 'Credenciais inválidas', 'erro');
+            btnLogin.disabled = false;
+            btnLogin.innerHTML = 'Entrar na conta';
+        }
+    } catch (erro) {
+        console.error('Erro:', erro);
+        mostrarMensagem('Erro ao conectar com o servidor!', 'erro');
+        btnLogin.disabled = false;
+        btnLogin.innerHTML = 'Entrar na conta';
+    }
+});
+    </script>
+</body>
+</html>

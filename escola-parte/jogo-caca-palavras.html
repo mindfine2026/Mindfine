@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindfine - Ca√ßa-Palavras</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --azul-bright: #32B5F1;
+            --azul-escuro: #0277bd;
+            --azul-claro: #e1f5fe;
+            --branco: #ffffff;
+            --fundo-transparente: rgba(255, 255, 255, 0.98);
+        }
+
+        * {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        /* Camada de fundo igual ao Jogo da Velha */
+        .background-layer {
+            position: fixed; width: 110%; height: 110%;
+            background-image: url('fundos/fundo-a.png'); 
+            background-size: cover; background-position: center;
+            z-index: 1; left: -5%; top: -5%;
+            filter: blur(8px) brightness(0.6);
+        }
+
+        /* Header padr√£o Mindfine */
+        .diary-header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: white; padding: 12px 25px;
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 500;
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; flex-grow: 1; }
+        .back-btn { color: var(--azul-bright); font-size: 1.4rem; text-decoration: none; }
+        .diary-title h2 { margin: 0; font-size: 1rem; color: var(--azul-escuro); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background: var(--fundo-transparente);
+            padding: 25px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            width: 500px;
+            max-width: 95vw;
+            backdrop-filter: blur(10px);
+            margin-top: 60px;
+        }
+
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* Placar estilo Bolhas */
+        .scoreboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .score-bubble {
+            background: var(--azul-claro);
+            padding: 8px;
+            border-radius: 15px;
+            border: 1px solid rgba(50, 181, 241, 0.2);
+        }
+        .score-label { font-size: 0.6rem; text-transform: uppercase; color: var(--azul-escuro); font-weight: 800; }
+        .score-value { font-size: 1.1rem; color: var(--azul-escuro); font-weight: 800; }
+
+        /* Estilo do Grid */
+        .grid-container {
+            background: #fff;
+            padding: 10px;
+            border-radius: 20px;
+            border: 2px solid var(--azul-claro);
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        .grid {
+            display: grid;
+            gap: 4px;
+            user-select: none;
+        }
+        .cell {
+            width: 32px;
+            height: 32px;
+            background: #fff;
+            border: 1px solid #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--azul-escuro);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .cell.selected {
+            background: var(--azul-bright);
+            color: white;
+            border-color: var(--azul-bright);
+        }
+        .cell.found {
+            background: var(--azul-escuro);
+            color: white;
+            border-color: var(--azul-escuro);
+        }
+
+        /* Lista de Palavras */
+        .words-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .word-item {
+            padding: 5px 12px;
+            background: var(--azul-claro);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--azul-escuro);
+            text-transform: uppercase;
+        }
+        .word-item.found {
+            background: #d1d1d1;
+            color: #888;
+            text-decoration: line-through;
+        }
+
+        /* Bot√µes Estilizados */
+        .btn-style {
+            padding: 12px 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 2px solid var(--azul-bright);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: white;
+            color: var(--azul-escuro);
+            font-family: 'Montserrat', sans-serif;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .btn-style:hover {
+            background: var(--azul-bright);
+            color: white;
+        }
+        .btn-filled {
+            background: var(--azul-bright);
+            color: white;
+        }
+
+        .message-box {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--azul-escuro);
+            text-transform: uppercase;
+            min-height: 30px;
+            margin-bottom: 10px;
+        }
+
+        /* Confete */
+        #confettiContainer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1000;
+        }
+
+        @media (max-width: 450px) {
+            .cell { width: 25px; height: 25px; font-size: 0.7rem; }
+            .container { padding: 15px; }
+        }
+    
+
+
+@media (max-width: 480px) {
+    .kpi-strip, .stats-grid { grid-template-columns: 1fr !important; }
+    .page-header { padding: 15px; }
+    .page-title { font-size: 18px; }
+    .kpi-value, .stat-value { font-size: 18px !important; }
+}
+
+/* ========== LAYOUT RESPONSIVO COMPLETO PARA MOBILE ========== */
+
+/* Reset para mobile */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Viewport j· deve estar configurado */
+/* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"> */
+
+@media (max-width: 768px) {
+    
+    /* ---------- GERAL ---------- */
+    body {
+        overflow-x: hidden;
+        font-size: 14px;
+    }
+    
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 75%;
+        max-width: 280px;
+        height: 100vh;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+    }
+    
+    .sidebar.open {
+        left: 0;
+    }
+    
+    /* Bot„o hamb˙rguer */
+    .menu-toggle {
+        display: flex !important;
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 1001;
+        background: #32B5F1;
+        border: none;
+        border-radius: 12px;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        cursor: pointer;
+        color: white;
+    }
+    
+    .menu-toggle i {
+        width: 24px;
+        height: 24px;
+        stroke-width: 2;
+    }
+    
+    /* ---------- CONTE⁄DO PRINCIPAL ---------- */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 70px 16px 30px !important;
+        width: 100% !important;
+        overflow-x: hidden;
+    }
+    
+    /* ---------- HEADER ---------- */
+    .page-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 16px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .header-left h1 {
+        font-size: 22px !important;
+        word-break: break-word;
+    }
+    
+    .header-left p {
+        font-size: 12px !important;
+    }
+    
+    .header-right {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    /* ---------- BOT’ES ---------- */
+    .btn-primary, .btn-ghost {
+        padding: 12px 16px !important;
+        font-size: 14px !important;
+        min-height: 44px;
+        width: auto;
+    }
+    
+    /* ---------- KPIs / CARDS ---------- */
+    .kpi-strip, .stats-grid, .summary-strip {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .kpi-card, .stat-card, .summary-chip {
+        padding: 16px !important;
+        border-radius: 16px !important;
+    }
+    
+    .kpi-value, .stat-value, .chip-value {
+        font-size: 24px !important;
+    }
+    
+    .kpi-label, .stat-label, .chip-label {
+        font-size: 10px !important;
+    }
+    
+    /* ---------- INPUTS E FORMUL¡RIOS ---------- */
+    input, 
+    select, 
+    textarea,
+    .input-field,
+    .form-input,
+    .form-select,
+    .form-textarea {
+        font-size: 16px !important;
+        padding: 14px !important;
+        min-height: 48px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    
+    /* ---------- LOGIN ---------- */
+    .split-screen {
+        flex-direction: column !important;
+    }
+    
+    .left-side {
+        min-height: 200px !important;
+        padding: 20px !important;
+    }
+    
+    .right-side {
+        padding: 30px 20px !important;
+    }
+    
+    .login-container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .login-container .app-name {
+        font-size: 28px !important;
+    }
+    
+    .login-btn {
+        min-height: 52px !important;
+        font-size: 16px !important;
+        border-radius: 14px !important;
+    }
+    
+    /* ---------- TURMAS ---------- */
+    .classes-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    
+    .class-card {
+        border-radius: 16px !important;
+    }
+    
+    .class-card .card-body {
+        padding: 16px !important;
+    }
+    
+    /* ---------- ALERTAS ---------- */
+    .alert-card-inner {
+        flex-direction: column !important;
+        padding: 16px !important;
+    }
+    
+    .alert-left {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        margin-bottom: 12px;
+    }
+    
+    .alert-time-col {
+        width: 100% !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #eee;
+    }
+    
+    .alert-meta {
+        flex-wrap: wrap;
+    }
+    
+    .alert-actions {
+        flex-direction: row;
+    }
+    
+    /* ---------- INTERVEN«’ES (KANBAN) ---------- */
+    .kanban-board {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    
+    .kanban-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .kanban-header .search-box {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+    
+    .kanban-header .filter-pill {
+        text-align: center;
+        flex: 1;
+    }
+    
+    /* ---------- TOOLBAR/FILTROS ---------- */
+    .toolbar, .filters-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 16px !important;
+        gap: 12px !important;
+    }
+    
+    .search-box {
+        width: 100% !important;
+        padding: 10px 14px !important;
+    }
+    
+    .search-box input {
+        font-size: 16px !important;
+    }
+    
+    .filter-pill, .filter-chip, .view-btn {
+        justify-content: center;
+        text-align: center;
+        flex: 1;
+    }
+    
+    .filter-group {
+        width: 100%;
+    }
+    
+    .filter-select {
+        width: 100%;
+    }
+    
+    /* ---------- MODAL ---------- */
+    .modal-overlay {
+        align-items: flex-end !important;
+    }
+    
+    .modal {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        border-radius: 20px 20px 0 0 !important;
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+        padding: 20px !important;
+    }
+    
+    /* ---------- HEATMAP ---------- */
+    .heatmap-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+    
+    .heatmap-cell {
+        padding: 12px 8px !important;
+    }
+    
+    .heatmap-cell .hc-score {
+        font-size: 20px !important;
+    }
+    
+    /* ---------- TABELAS ---------- */
+    .curso-table,
+    .curso-table tbody,
+    .curso-table tr,
+    .curso-table td {
+        display: block;
+        width: 100%;
+    }
+    
+    .curso-table thead {
+        display: none;
+    }
+    
+    .curso-table tr {
+        margin-bottom: 12px;
+        padding: 12px;
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+    
+    .curso-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0 !important;
+        border: none !important;
+    }
+    
+    .curso-table td:before {
+        content: attr(data-label);
+        font-weight: 800;
+        font-size: 11px;
+        color: #64748b;
+        text-transform: uppercase;
+    }
+    
+    /* ---------- CHART / GR¡FICOS ---------- */
+    .emotion-row {
+        flex-wrap: wrap;
+    }
+    
+    .bar-container {
+        min-width: 100px;
+    }
+    
+    /* ---------- PAINEL LATERAL ---------- */
+    .side-panel {
+        margin-top: 20px;
+    }
+    
+    .card {
+        padding: 16px !important;
+        border-radius: 16px !important;
+    }
+    
+    .card-title {
+        font-size: 14px !important;
+    }
+    
+    /* ---------- RESPONS¡VEIS ---------- */
+    .resp-row {
+        flex-wrap: wrap;
+    }
+    
+    .resp-count {
+        margin-left: auto;
+    }
+    
+    /* ---------- TIMELINE ---------- */
+    .timeline {
+        padding-left: 8px;
+    }
+    
+    .tl-content {
+        flex: 1;
+    }
+    
+    /* ---------- RODAP… ---------- */
+    .sidebar-footer {
+        padding-bottom: 20px;
+    }
+}
+
+/* Para telas muito pequenas (menos de 400px) */
+@media (max-width: 480px) {
+    .kpi-strip, .stats-grid, .summary-strip {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .page-title {
+        font-size: 20px !important;
+    }
+    
+    .heatmap-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .btn-primary, .btn-ghost {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .alert-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .alert-actions button {
+        width: 100%;
+        margin: 4px 0;
+    }
+}
+
+/* Garantir que inputs n„o faÁam zoom no iOS */
+@supports (-webkit-touch-callout: none) {
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+</style>
+</head>
+<body>
+
+    <div class="background-layer"></div>
+
+    <header class="diary-header">
+        <div class="header-left">
+            <a href="sala-de-jogos.html" class="back-btn"><i class="fas fa-chevron-left"></i></a>
+            <div class="diary-title">
+                <h2>Ca√ßa-Palavras</h2>
+            </div>
+        </div>
+        <i class="fas fa-search" style="color: var(--azul-bright); font-size: 1.2rem;"></i>
+    </header>
+
+    <div class="container">
+        <div id="confettiContainer"></div>
+       
+        <!-- TELA 1: MENU -->
+        <div class="screen active" id="menuScreen">
+            <div class="message-box">Escolha o n√≠vel de dificuldade</div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn-style" onclick="startGame('easy')">Iniciante (8x8)</button>
+                <button class="btn-style" onclick="startGame('medium')">Intermedi√°rio (10x10)</button>
+                <button class="btn-style" onclick="startGame('hard')">Mestre (12x12)</button>
+            </div>
+        </div>
+
+        <!-- TELA 2: JOGO -->
+        <div class="screen" id="gameScreen">
+            <div class="scoreboard">
+                <div class="score-bubble">
+                    <div class="score-label">Tema</div>
+                    <div class="score-value" id="themeDisplay">...</div>
+                </div>
+                <div class="score-bubble">
+                    <div class="score-label">Pontos</div>
+                    <div class="score-value" id="scoreDisplay">0</div>
+                </div>
+            </div>
+
+<div class="recorde-text" id="recordeDisplay" style="margin-top: 5px; margin-bottom: 5px;">üèÜ Melhor: --</div>
+
+            <div class="grid-container">
+                <div class="grid" id="grid"></div>
+            </div>
+
+            <div class="words-list" id="wordsList"></div>
+            <div class="message-box" id="messageBox">Encontre as palavras!</div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-style" onclick="location.reload()">Sair</button>
+                <button class="btn-style btn-filled" onclick="newGame()">Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+<script src="mindfine-sync.js"></script>
+<script>
+    let matriculaAtual = '';
+    let melhorPontuacao = { easy: 0, medium: 0, hard: 0 };
+    let dificuldadeAtual = 'medium';
+    
+    // ========== FUN√á√ïES DE RECORDE ==========
+    
+    async function carregarRecorde(dificuldade) {
+        const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+        matriculaAtual = usuario.matricula || '123456';
+        const nomeJogo = `caca_palavras_${dificuldade}`;
+        
+        try {
+            const response = await fetch(`https://mindfine-backend.onrender.com/api/recorde/${matriculaAtual}/${nomeJogo}`);
+            const dados = await response.json();
+            melhorPontuacao[dificuldade] = dados.recorde || 0;
+            console.log(`üèÜ Recorde ${dificuldade}: ${melhorPontuacao[dificuldade]} pontos`);
+        } catch (error) {
+            console.error('Erro ao carregar recorde:', error);
+        }
+    }
+    
+    async function salvarRecorde(dificuldade, pontuacao) {
+        if (pontuacao <= melhorPontuacao[dificuldade]) return false;
+        
+        const nomeJogo = `caca_palavras_${dificuldade}`;
+        
+        try {
+            await fetch(`https://mindfine-backend.onrender.com/api/recorde/${matriculaAtual}/${nomeJogo}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pontuacao: pontuacao })
+            });
+            melhorPontuacao[dificuldade] = pontuacao;
+            console.log(`üéâ Novo recorde (${dificuldade}): ${pontuacao} pontos!`);
+            return true;
+        } catch (error) {
+            console.error('Erro ao salvar recorde:', error);
+            return false;
+        }
+    }
+
+    // ========== L√ìGICA DO JOGO ==========
+    
+    const gridElement = document.getElementById('grid');
+    const wordsListElement = document.getElementById('wordsList');
+    const themeDisplay = document.getElementById('themeDisplay');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const messageBox = document.getElementById('messageBox');
+    const menuScreen = document.getElementById('menuScreen');
+    const gameScreen = document.getElementById('gameScreen');
+
+    let difficulty = 'medium';
+    let gridSize = 10;
+    let grid = [];
+    let words = [];
+    let foundWords = [];
+    let selectedCells = [];
+    let isSelecting = false;
+    let score = 0;
+
+    const themes = {
+        easy: [
+            { name: 'Cores', words: ['AZUL', 'VERDE', 'ROSA', 'ROXO', 'AMARELO'] },
+            { name: 'Frutas', words: ['MACA', 'UVA', 'PERA', 'MANGA', 'LIMAO'] },
+            { name: 'Calma', words: ['PAZ', 'ZEN', 'FOCO', 'RISO', 'SONO'] }
+        ],
+        medium: [
+            { name: 'Natureza', words: ['FLORESTA', 'OCEANO', 'MONTANHA', 'NUVEM', 'SOLAR', 'ARVORE'] },
+            { name: 'Sentimentos', words: ['ALEGRIA', 'CALMA', 'AMOR', 'GRATIDAO', 'ESPERANCA'] },
+            { name: 'Habilidades', words: ['LEITURA', 'MUSICA', 'PINTURA', 'DANCA', 'POESIA'] },
+            { name: 'Clima', words: ['CHUVA', 'VENTO', 'TROVAO', 'CALOR', 'FRESCO'] }
+        ],
+        hard: [
+            { name: 'Mindfulness', words: ['MINDFULNESS', 'PRESENCA', 'RESPIRAR', 'ATENCAO', 'SILENCIO', 'EQUILIBRIO'] },
+            { name: 'Psicologia', words: ['EMPATIA', 'RESILIENCIA', 'TERAPIA', 'COGNICAO', 'EVOLUCAO', 'PSIQUICO'] },
+            { name: 'Bem-Estar', words: ['MEDITACAO', 'AUTOESTIMA', 'SAUDE', 'HARMONIA', 'VITALIDADE', 'SERENIDADE'] }
+        ]
+    };
+
+    async function startGame(level) {
+        difficulty = level;
+        dificuldadeAtual = level;
+        gridSize = level === 'easy' ? 8 : (level === 'medium' ? 10 : 12);
+        
+        await carregarRecorde(difficulty);
+        
+        menuScreen.classList.remove('active');
+        gameScreen.classList.add('active');
+        newGame();
+    }
+
+    function newGame() {
+        score = 0;
+        foundWords = [];
+        selectedCells = [];
+        updateScore();
+        
+        const themeList = themes[difficulty];
+        const selectedTheme = themeList[Math.floor(Math.random() * themeList.length)];
+        themeDisplay.textContent = selectedTheme.name;
+        words = selectedTheme.words;
+
+        createGrid();
+        placeWords();
+        fillEmpty();
+        render();
+        updateRecordeDisplay();
+    }
+    
+    function updateRecordeDisplay() {
+        const recordeDisplay = document.getElementById('recordeDisplay');
+        if (recordeDisplay && melhorPontuacao[difficulty] > 0) {
+            recordeDisplay.innerHTML = `üèÜ Melhor: ${melhorPontuacao[difficulty]} pontos`;
+        } else if (recordeDisplay) {
+            recordeDisplay.innerHTML = `üèÜ Melhor: --`;
+        }
+    }
+
+    function createGrid() {
+        grid = Array(gridSize).fill().map(() => Array(gridSize).fill({ letter: '', found: false }));
+    }
+
+    function placeWords() {
+        words.forEach(word => {
+            let placed = false;
+            while (!placed) {
+                const isHoriz = Math.random() > 0.5;
+                const row = Math.floor(Math.random() * (isHoriz ? gridSize : gridSize - word.length));
+                const col = Math.floor(Math.random() * (isHoriz ? gridSize - word.length : gridSize));
+                
+                let canPlace = true;
+                for (let i = 0; i < word.length; i++) {
+                    const r = isHoriz ? row : row + i;
+                    const c = isHoriz ? col + i : col;
+                    if (grid[r][c].letter !== '' && grid[r][c].letter !== word[i]) {
+                        canPlace = false; break;
+                    }
+                }
+
+                if (canPlace) {
+                    for (let i = 0; i < word.length; i++) {
+                        const r = isHoriz ? row : row + i;
+                        const c = isHoriz ? col + i : col;
+                        grid[r][c] = { letter: word[i], found: false };
+                    }
+                    placed = true;
+                }
+            }
+        });
+    }
+
+    function fillEmpty() {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for (let r = 0; r < gridSize; r++) {
+            for (let c = 0; c < gridSize; c++) {
+                if (grid[r][c].letter === '') {
+                    grid[r][c] = { letter: letters[Math.floor(Math.random() * 26)], found: false };
+                }
+            }
+        }
+    }
+
+    function render() {
+        gridElement.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+        gridElement.innerHTML = '';
+        for (let r = 0; r < gridSize; r++) {
+            for (let c = 0; c < gridSize; c++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell' + (grid[r][c].found ? ' found' : '');
+                cell.textContent = grid[r][c].letter;
+                cell.onmousedown = () => startSelect(r, c);
+                cell.onmouseenter = () => moveSelect(r, c);
+                cell.onmouseup = endSelect;
+                gridElement.appendChild(cell);
+            }
+        }
+
+        wordsListElement.innerHTML = '';
+        words.forEach(w => {
+            const span = document.createElement('span');
+            span.className = 'word-item' + (foundWords.includes(w) ? ' found' : '');
+            span.textContent = w;
+            wordsListElement.appendChild(span);
+        });
+    }
+
+    function startSelect(r, c) { isSelecting = true; selectedCells = [{r, c}]; updateSelection(); }
+    function moveSelect(r, c) {
+        if (!isSelecting) return;
+        if (!selectedCells.some(cell => cell.r === r && cell.c === c)) {
+            selectedCells.push({r, c});
+            updateSelection();
+        }
+    }
+
+    function endSelect() {
+        if (!isSelecting) return;
+        isSelecting = false;
+        const selectedWord = selectedCells.map(cell => grid[cell.r][cell.c].letter).join('');
+        const reversedWord = selectedWord.split('').reverse().join('');
+
+        if (words.includes(selectedWord) && !foundWords.includes(selectedWord)) {
+            markFound(selectedWord);
+        } else if (words.includes(reversedWord) && !foundWords.includes(reversedWord)) {
+            markFound(reversedWord);
+        }
+
+        selectedCells = [];
+        render();
+    }
+
+    function updateSelection() {
+        const allCells = document.querySelectorAll('.cell');
+        allCells.forEach(cell => cell.classList.remove('selected'));
+        selectedCells.forEach(cell => {
+            allCells[cell.r * gridSize + cell.c].classList.add('selected');
+        });
+    }
+
+    async function markFound(word) {
+        foundWords.push(word);
+        selectedCells.forEach(cell => grid[cell.r][cell.c].found = true);
+        score += 10;
+        updateScore();
+        
+        if (foundWords.length === words.length) {
+            messageBox.textContent = "Incr√≠vel! Voc√™ achou tudo!";
+            createBlueConfetti();
+            
+            // Salvar recorde
+            await salvarRecorde(difficulty, score);
+            updateRecordeDisplay();
+        }
+    }
+
+    function updateScore() { 
+        scoreDisplay.textContent = score; 
+    }
+
+    function createBlueConfetti() {
+        const container = document.getElementById('confettiContainer');
+        const colors = ['#32B5F1', '#0277bd', '#b3e5fc', '#ffffff'];
+        for (let i = 0; i < 50; i++) {
+            const c = document.createElement('div');
+            c.style.position = 'absolute';
+            c.style.width = '8px'; c.style.height = '8px';
+            c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            c.style.left = Math.random() * 100 + '%';
+            c.style.top = '-10px';
+            c.style.borderRadius = '50%';
+            container.appendChild(c);
+            c.animate([
+                { transform: 'translateY(0) rotate(0)', opacity: 1 },
+                { transform: `translateY(${window.innerHeight}px) rotate(360deg)`, opacity: 0 }
+            ], { duration: 2000 + Math.random() * 1000, easing: 'ease-out' }).onfinish = () => c.remove();
+        }
+    }
+
+    document.addEventListener('mouseup', () => isSelecting = false);
+</script>
+
+  </body>
+</html>
