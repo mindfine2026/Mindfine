@@ -1,3 +1,7 @@
+require('dotenv').config()
+console.log('Tipo da URL:', typeof process.env.DATABASE_URL);
+console.log('URL definida?', Boolean(process.env.DATABASE_URL));
+
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
