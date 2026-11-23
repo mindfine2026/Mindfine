@@ -275,7 +275,7 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Viewport j· deve estar configurado */
+/* Viewport jÔøΩ deve estar configurado */
 /* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"> */
 
 @media (max-width: 768px) {
@@ -305,7 +305,7 @@
         left: 0;
     }
     
-    /* Bot„o hamb˙rguer */
+    /* BotÔøΩo hambÔøΩrguer */
     .menu-toggle {
         display: flex !important;
         position: fixed;
@@ -330,7 +330,7 @@
         stroke-width: 2;
     }
     
-    /* ---------- CONTE⁄DO PRINCIPAL ---------- */
+    /* ---------- CONTEÔøΩDO PRINCIPAL ---------- */
     .main-content {
         margin-left: 0 !important;
         padding: 70px 16px 30px !important;
@@ -361,7 +361,7 @@
         flex-wrap: wrap;
     }
     
-    /* ---------- BOT’ES ---------- */
+    /* ---------- BOTÔøΩES ---------- */
     .btn-primary, .btn-ghost {
         padding: 12px 16px !important;
         font-size: 14px !important;
@@ -389,7 +389,7 @@
         font-size: 10px !important;
     }
     
-    /* ---------- INPUTS E FORMUL¡RIOS ---------- */
+    /* ---------- INPUTS E FORMULÔøΩRIOS ---------- */
     input, 
     select, 
     textarea,
@@ -479,7 +479,7 @@
         flex-direction: row;
     }
     
-    /* ---------- INTERVEN«’ES (KANBAN) ---------- */
+    /* ---------- INTERVENÔøΩÔøΩES (KANBAN) ---------- */
     .kanban-board {
         grid-template-columns: 1fr !important;
         gap: 20px !important;
@@ -596,7 +596,7 @@
         text-transform: uppercase;
     }
     
-    /* ---------- CHART / GR¡FICOS ---------- */
+    /* ---------- CHART / GRÔøΩFICOS ---------- */
     .emotion-row {
         flex-wrap: wrap;
     }
@@ -619,7 +619,7 @@
         font-size: 14px !important;
     }
     
-    /* ---------- RESPONS¡VEIS ---------- */
+    /* ---------- RESPONSÔøΩVEIS ---------- */
     .resp-row {
         flex-wrap: wrap;
     }
@@ -637,7 +637,7 @@
         flex: 1;
     }
     
-    /* ---------- RODAP… ---------- */
+    /* ---------- RODAPÔøΩ ---------- */
     .sidebar-footer {
         padding-bottom: 20px;
     }
@@ -673,7 +673,7 @@
     }
 }
 
-/* Garantir que inputs n„o faÁam zoom no iOS */
+/* Garantir que inputs nÔøΩo faÔøΩam zoom no iOS */
 @supports (-webkit-touch-callout: none) {
     input, select, textarea {
         font-size: 16px !important;
@@ -814,7 +814,7 @@ console.log('NOME DO USU√ÅRIO:', finalUserName);
             
             try {
              // No login.html, a parte do fetch j√° est√° correta, mas vamos garantir:
-const resposta = await fetch('https://mindfine-backend.onrender.com/api/login', {
+const resposta = await fetch('/api/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
