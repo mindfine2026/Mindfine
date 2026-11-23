@@ -130,7 +130,7 @@
         matriculaAtual = usuario.matricula;
         if (!matriculaAtual) { window.location.href = "login-mobile.html"; return; }
         try {
-            const response = await fetch(`https://mindfine-backend.onrender.com/api/diario/${matriculaAtual}`);
+            const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/diario/${matriculaAtual}`);
             diaryEntries = await response.json();
             renderEntries();
         } catch (error) { 
@@ -215,7 +215,7 @@
             audio_base64: currentAudioBase64 || null 
         };
         try {
-            const response = await fetch(`https://mindfine-backend.onrender.com/api/diario/${matriculaAtual}`, 
+            const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/diario/${matriculaAtual}`, 
                 { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(entry) });
             const result = await response.json();
             if (result.sucesso) { 
@@ -293,7 +293,7 @@
     async function confirmDelete() { 
         if (pendingDeleteId) { 
             try { 
-                await fetch(`https://mindfine-backend.onrender.com/api/diario/${matriculaAtual}/${pendingDeleteId}`, { method: "DELETE" }); 
+                await fetch(`https://mindfine-backend-9m0y.onrender.com/api/diario/${matriculaAtual}/${pendingDeleteId}`, { method: "DELETE" }); 
                 await carregarDiario(); 
                 showToast("Registro apagado"); 
             } catch (error) { 

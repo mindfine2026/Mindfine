@@ -745,7 +745,7 @@
     // Carregar dados
     async function carregarTurmas() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/escola/turmas');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/escola/turmas');
             turmas = await response.json();
             render();
             carregarEstatisticas();
@@ -758,7 +758,7 @@
 
     async function carregarEstatisticas() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/escola/estatisticas');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/escola/estatisticas');
             const dados = await response.json();
             document.getElementById('totalTurmas').textContent = turmas.length;
             document.getElementById('totalTurmasMsg').textContent = turmas.length + " turmas ativas";
@@ -771,7 +771,7 @@
 
     async function carregarAlertas() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/alertas');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/alertas');
             const alertas = await response.json();
             const ativos = alertas.filter(a => a.resolvido !== 1).length;
             document.getElementById('totalAlertas').textContent = ativos;

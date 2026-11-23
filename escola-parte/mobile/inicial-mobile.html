@@ -527,7 +527,7 @@
         if (!matriculaAtual) { window.location.href = 'login-mobile.html'; return; }
 
         try {
-            const res = await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`);
+            const res = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`);
             const dados = await res.json();
             currentCoins = dados.moedas || 0;
             currentXP = dados.xp || 0;
@@ -579,7 +579,7 @@
 
     async function changeSkin(skin) {
         document.getElementById('panda-image').src = skin;
-        await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`, {
+        await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ skin_atual: skin })
         });
@@ -610,7 +610,7 @@
     async function confirmFeeling() {
         const emocaoMap = { 'Alegria':'😊', 'Tristeza':'😢', 'Relaxado':'😌', 'Ansioso':'😰', 'Raiva':'😠', 'Animado':'😁' };
         try {
-            const res = await fetch(`https://mindfine-backend.onrender.com/api/emocao/${matriculaAtual}`, {
+            const res = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/emocao/${matriculaAtual}`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ emocao: selectedFeeling, emoji: emocaoMap[selectedFeeling] })
             });
@@ -634,7 +634,7 @@
     }
 
     carregarDados();
-    setInterval(() => fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`).then(r=>r.json()).then(d=>{document.getElementById('coin-count').innerText=d.moedas}), 30000);
+    setInterval(() => fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`).then(r=>r.json()).then(d=>{document.getElementById('coin-count').innerText=d.moedas}), 30000);
 </script>
 </body>
 </html>

@@ -354,17 +354,17 @@
 
         try {
             // Buscar nível do aluno
-            const progressoRes = await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`);
+            const progressoRes = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`);
             const progresso = await progressoRes.json();
             currentLevel = progresso.nivel || 1;
 
             // Buscar páginas desbloqueadas
-            const paginasRes = await fetch(`https://mindfine-backend.onrender.com/api/figurinhas/paginas-desbloqueadas/${matriculaAtual}`);
+            const paginasRes = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/figurinhas/paginas-desbloqueadas/${matriculaAtual}`);
             const paginasData = await paginasRes.json();
             paginasDesbloqueadas = paginasData.paginas_desbloqueadas || 1;
 
             // Buscar figurinhas desbloqueadas
-            const figRes = await fetch(`https://mindfine-backend.onrender.com/api/figurinhas/${matriculaAtual}`);
+            const figRes = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/figurinhas/${matriculaAtual}`);
             figurinhasDesbloqueadas = await figRes.json();
 
             renderAlbum();
@@ -385,7 +385,7 @@
     async function desbloquearPagina(pageIndex) {
         if (pageIndex <= paginasDesbloqueadas) return true;
         try {
-            await fetch('https://mindfine-backend.onrender.com/api/figurinhas/paginas-desbloqueadas', {
+            await fetch('https://mindfine-backend-9m0y.onrender.com/api/figurinhas/paginas-desbloqueadas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ matricula: matriculaAtual, paginas: pageIndex })

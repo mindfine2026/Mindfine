@@ -884,7 +884,7 @@
 
     async function carregarUsuarios() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/admin/usuarios');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/admin/usuarios');
             const data = await response.json();
             usuarios = data.filter(u => u.tipo === 'gestao' || u.tipo === 'psicologia');
             renderResponsaveis();
@@ -893,7 +893,7 @@
 
     async function carregarIntervencoes() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/intervencoes');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/intervencoes');
             intervencoes = await response.json();
             renderKanban();
             atualizarKPIs();
@@ -974,7 +974,7 @@
         const prog = { pendente: 30, andamento: 100, concluido: 0 };
         i.status = next[i.status];
         i.progresso = prog[i.status];
-        await fetch(`https://mindfine-backend.onrender.com/api/intervencoes/${i.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: i.status, progresso: i.progresso }) });
+        await fetch(`https://mindfine-backend-9m0y.onrender.com/api/intervencoes/${i.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: i.status, progresso: i.progresso }) });
         fecharModalBtn();
         renderKanban();
         atualizarKPIs();
@@ -985,7 +985,7 @@
     async function excluirIntervencao() {
         if (!openId) return;
         if (confirm('Remover esta intervenção?')) {
-            await fetch(`https://mindfine-backend.onrender.com/api/intervencoes/${openId}`, { method: 'DELETE' });
+            await fetch(`https://mindfine-backend-9m0y.onrender.com/api/intervencoes/${openId}`, { method: 'DELETE' });
             intervencoes = intervencoes.filter(x => x.id !== openId);
             fecharModalBtn();
             renderKanban();
@@ -1010,7 +1010,7 @@
             status: 'pendente',
             curso: getCursoCodigo(document.getElementById('fTurma').value)
         };
-        await fetch('https://mindfine-backend.onrender.com/api/intervencoes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(nova) });
+        await fetch('https://mindfine-backend-9m0y.onrender.com/api/intervencoes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(nova) });
         intervencoes.unshift(nova);
         renderKanban();
         atualizarKPIs();
@@ -1044,7 +1044,7 @@
     carregarUsuarios();
     carregarIntervencoes();
     setInterval(() => {
-        fetch('https://mindfine-backend.onrender.com/api/alertas').then(r=>r.json()).then(a => {
+        fetch('https://mindfine-backend-9m0y.onrender.com/api/alertas').then(r=>r.json()).then(a => {
             const ativos = a.filter(a=>a.resolvido!==1).length;
             document.getElementById('sidebarBadge').textContent = ativos;
         }).catch(e=>console.error);

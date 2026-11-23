@@ -1111,7 +1111,7 @@ h1, h2, h3, h4, .card-title {
     
     async function carregarEstatisticas() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/escola/estatisticas');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/escola/estatisticas');
             estatisticas = await response.json();
             atualizarKPIs();
         } catch (error) {
@@ -1121,7 +1121,7 @@ h1, h2, h3, h4, .card-title {
     
   async function carregarTurmas() {
     try {
-        const response = await fetch('https://mindfine-backend.onrender.com/api/escola/turmas');
+        const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/escola/turmas');
         const turmas = await response.json();
         // Armazenar turmas para usar nos filtros
         window.todasTurmas = turmas;
@@ -1141,7 +1141,7 @@ async function carregarEmocoesReais() {
         if (curso === 'informatica') cursoParam = 'inf';
         if (curso === 'administracao') cursoParam = 'adm';
         
-        const url = new URL('https://mindfine-backend.onrender.com/api/relatorio/emocoes');
+        const url = new URL('https://mindfine-backend-9m0y.onrender.com/api/relatorio/emocoes');
         url.searchParams.set('periodo', periodo);
         url.searchParams.set('curso', cursoParam);
         url.searchParams.set('ano', ano);
@@ -1345,7 +1345,7 @@ async function carregarEmocoesReais() {
 
 async function carregarEstatisticasComFiltros(ano, curso) {
     try {
-        const response = await fetch('https://mindfine-backend.onrender.com/api/escola/estatisticas');
+        const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/escola/estatisticas');
         const dados = await response.json();
         
         let totalAlunos = dados.totalAlunos || 0;
@@ -1398,7 +1398,7 @@ function atualizarBadgeAlertas() {
 
 async function buscarAlertasDoBackend() {
     try {
-        const response = await fetch('https://mindfine-backend.onrender.com/api/alertas');
+        const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/alertas');
         const alertas = await response.json();
         const ativos = alertas.filter(a => a.resolvido !== 1).length;
         

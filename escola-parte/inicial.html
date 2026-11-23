@@ -1153,7 +1153,7 @@ async function carregarDados() {
     
     // Buscar nome do aluno
     try {
-        const alunoResponse = await fetch(`https://mindfine-backend.onrender.com/api/aluno/${matriculaAtual}`);
+        const alunoResponse = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/aluno/${matriculaAtual}`);
         if (alunoResponse.ok) {
             const alunoData = await alunoResponse.json();
             nomeAluno = alunoData.nome || 'Aluno';
@@ -1172,7 +1172,7 @@ async function carregarDados() {
 
 
     try {
-        const response = await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`);
+        const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`);
         const dados = await response.json();
         
         currentCoins = dados.moedas || 0;
@@ -1205,7 +1205,7 @@ async function carregarDados() {
 initUniverses();
 
 // Salvar no backend apenas o Santuário
-await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`, {
+await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ universos_desbloqueados: ["Santuário"] })
@@ -1229,7 +1229,7 @@ await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtua
         }
         
         try {
-            await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`, {
+            await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1295,7 +1295,7 @@ async function resetarUniversosIniciais() {
         // SEMPRE FORÇAR APENAS SANTUÁRIO DESBLOQUEADO
         const universosIniciais = ["Santuário"];
         
-        await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`, {
+        await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ universos_desbloqueados: universosIniciais })
@@ -1320,7 +1320,7 @@ async function resetarUniversosIniciais() {
 
 async function salvarFundo(fundoImg) {
     try {
-        await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`, {
+        await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ fundo_atual: fundoImg })
@@ -1333,7 +1333,7 @@ async function salvarFundo(fundoImg) {
     
     // SALVAR APENAS NO BACKEND, NÃO NO LOCALSTORAGE
     try {
-        await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`, {
+        await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ skin_atual: skinImg })
@@ -1621,7 +1621,7 @@ function buildCalendar() {
 
 async function carregarHistoricoEmocoes() {
     try {
-        const response = await fetch(`https://mindfine-backend.onrender.com/api/emocoes/${matriculaAtual}`);
+        const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/emocoes/${matriculaAtual}`);
         const historico = await response.json();
         
         emotionHistory = {};
@@ -1655,7 +1655,7 @@ function getEmojiPorEmocao(emocao) {
 // Atualizar a interface com os novos valores
 async function atualizarInterface() {
     try {
-        const response = await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`);
+        const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`);
         const dados = await response.json();
         
         currentCoins = dados.moedas || 0;
@@ -1687,7 +1687,7 @@ function showNotif(title, msg, type = 'info') {
 async function sincronizarUniversos() {
     try {
         // Buscar as ilhas desbloqueadas do backend
-        const response = await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`);
+        const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`);
         const dados = await response.json();
         
         // Universos que o usuário já desbloqueou (vem do backend)
@@ -1717,7 +1717,7 @@ async function sincronizarUniversos() {
 async function desbloquearUniverso(nomeUniverso) {
     try {
         // Buscar universos já desbloqueados
-        const response = await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`);
+        const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`);
         const dados = await response.json();
         const universosAtuais = dados.universos_desbloqueados || [];
         
@@ -1728,7 +1728,7 @@ async function desbloquearUniverso(nomeUniverso) {
         universosAtuais.push(nomeUniverso);
         
         // Salvar no backend
-        await fetch(`https://mindfine-backend.onrender.com/api/progresso/${matriculaAtual}`, {
+        await fetch(`https://mindfine-backend-9m0y.onrender.com/api/progresso/${matriculaAtual}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ universos_desbloqueados: universosAtuais })

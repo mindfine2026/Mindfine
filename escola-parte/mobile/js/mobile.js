@@ -53,7 +53,7 @@ function formatDate(date) {
 }
 
 // API calls
-const API_URL = "https://mindfine-backend.onrender.com/api";
+const API_URL = "https://mindfine-backend-9m0y.onrender.com/api";
 
 async function apiFetch(endpoint, options = {}) {
     const response = await fetch(`${API_URL}${endpoint}`, {

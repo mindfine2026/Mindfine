@@ -385,7 +385,7 @@
             return;
         }
         try {
-            const response = await fetch(`https://mindfine-backend.onrender.com/api/recorde/${matriculaAtual}/jogo_memoria_${currentDifficulty}`);
+            const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/recorde/${matriculaAtual}/jogo_memoria_${currentDifficulty}`);
             const data = await response.json();
             melhorMovimento = data.recorde || 0;
             document.getElementById("recordDisplay").innerHTML = `🏆 Melhor: ${melhorMovimento > 0 ? melhorMovimento + " movimentos" : "--"}`;
@@ -395,7 +395,7 @@
     async function salvarRecorde(movimentos) {
         if (melhorMovimento > 0 && movimentos >= melhorMovimento) return;
         try {
-            await fetch(`https://mindfine-backend.onrender.com/api/recorde/${matriculaAtual}/jogo_memoria_${currentDifficulty}`, {
+            await fetch(`https://mindfine-backend-9m0y.onrender.com/api/recorde/${matriculaAtual}/jogo_memoria_${currentDifficulty}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ pontuacao: movimentos })

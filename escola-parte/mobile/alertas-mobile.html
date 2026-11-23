@@ -810,7 +810,7 @@
     // Carregar alertas
     async function carregarAlertas() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/alertas');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/alertas');
             const data = await response.json();
             alertas = data.map(a => ({ ...a, resolvido: a.resolvido === 1 }));
             renderAlertas();
@@ -877,7 +877,7 @@
 
     async function resolver(id) {
         try {
-            await fetch(`https://mindfine-backend.onrender.com/api/alertas/${id}/resolver`, { method: 'PUT' });
+            await fetch(`https://mindfine-backend-9m0y.onrender.com/api/alertas/${id}/resolver`, { method: 'PUT' });
             const alerta = alertas.find(a => a.id == id);
             if (alerta) alerta.resolvido = true;
             renderAlertas();
@@ -947,7 +947,7 @@
         };
         
         try {
-            await fetch('https://mindfine-backend.onrender.com/api/alertas', {
+            await fetch('https://mindfine-backend-9m0y.onrender.com/api/alertas', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(novoAlerta)
             });
@@ -962,7 +962,7 @@
 
     async function carregarInsights() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/escola/turmas');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/escola/turmas');
             const turmas = await response.json();
             const container = document.getElementById('insightsContainer');
             const totalAlertas = alertas.filter(a => !a.resolvido).length;

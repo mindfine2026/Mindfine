@@ -639,7 +639,7 @@
 
         try {
             // Emoções
-            const resEmocoes = await fetch(`https://mindfine-backend.onrender.com/api/relatorio/emocoes?periodo=${periodo}&curso=${curso}&ano=${ano}`);
+            const resEmocoes = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/relatorio/emocoes?periodo=${periodo}&curso=${curso}&ano=${ano}`);
             const emocoes = await resEmocoes.json();
             
             const emocoesHtml = `
@@ -654,7 +654,7 @@
             document.getElementById('kpiFelizes').textContent = (emocoes.alegria || 0) + '%';
             
             // Ranking
-            const resTurmas = await fetch('https://mindfine-backend.onrender.com/api/escola/turmas');
+            const resTurmas = await fetch('https://mindfine-backend-9m0y.onrender.com/api/escola/turmas');
             const turmas = await resTurmas.json();
             const ranking = turmas.sort((a,b) => b.nivelMedio - a.nivelMedio);
             const rankingHtml = ranking.map((t, i) => {
@@ -665,20 +665,20 @@
             document.getElementById('rankingContainer').innerHTML = rankingHtml || '<div>Nenhuma turma</div>';
             
             // Histórico
-            const resHist = await fetch(`https://mindfine-backend.onrender.com/api/relatorio/historico?curso=${curso}&ano=${ano}`);
+            const resHist = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/relatorio/historico?curso=${curso}&ano=${ano}`);
             const historico = await resHist.json();
             const histHtml = (historico || []).map(h => `<div class="monthly-row"><span class="monthly-month">${h.mes}</span><div class="monthly-bar-track"><div class="monthly-bar-fill" style="width:${(h.val/10)*100}%"></div></div><span class="monthly-val">${h.val}</span><span class="monthly-badge ${h.badge}">${h.badge === 'up' ? '▲' : h.badge === 'down' ? '▼' : '→'}</span></div>`).join('');
             document.getElementById('monthlyContainer').innerHTML = histHtml || '<div>Sem dados</div>';
             
             // Cursos
-            const resCursos = await fetch(`https://mindfine-backend.onrender.com/api/relatorio/cursos?curso=${curso}&ano=${ano}`);
+            const resCursos = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/relatorio/cursos?curso=${curso}&ano=${ano}`);
             let cursos = await resCursos.json();
             if (!Array.isArray(cursos)) cursos = [];
             const cursosHtml = cursos.map(c => `<tr><td>${c.curso}</td><td>${c.turmas}</td><td>${c.alunos}</td><td class="${c.score >= 7.5 ? 'score-high' : c.score >= 6 ? 'score-mid' : 'score-low'}">${c.score}</td><td>${c.alertas}</td></tr>`).join('');
             document.getElementById('cursosTableBody').innerHTML = cursosHtml || '<tr><td colspan="5">Nenhum curso</td></tr>';
             
             // Alertas
-            const resAlertas = await fetch('https://mindfine-backend.onrender.com/api/alertas');
+            const resAlertas = await fetch('https://mindfine-backend-9m0y.onrender.com/api/alertas');
             const alertas = await resAlertas.json();
             const ativos = alertas.filter(a => a.resolvido !== 1).length;
             document.getElementById('kpiAlertas').textContent = ativos;
@@ -711,7 +711,7 @@
 
     carregarDados();
     setInterval(() => {
-        fetch('https://mindfine-backend.onrender.com/api/alertas').then(r=>r.json()).then(a => {
+        fetch('https://mindfine-backend-9m0y.onrender.com/api/alertas').then(r=>r.json()).then(a => {
             const ativos = a.filter(a=>a.resolvido!==1).length;
             document.getElementById('kpiAlertas').textContent = ativos;
             document.getElementById('sidebarBadge').textContent = ativos;

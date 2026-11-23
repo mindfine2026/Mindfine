@@ -361,7 +361,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     btnLogin.innerHTML = '<div class="spinner"></div>';
     
     try {
-        const resposta = await fetch('https://mindfine-backend.onrender.com/api/login', {
+        const resposta = await fetch('https://mindfine-backend-9m0y.onrender.com/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

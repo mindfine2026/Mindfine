@@ -1137,7 +1137,7 @@ let usuarios = [];
 
 async function carregarUsuarios() {
     try {
-        const response = await fetch('https://mindfine-backend.onrender.com/api/admin/usuarios');
+        const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/admin/usuarios');
         const data = await response.json();
         // Filtrar apenas gestão e psicologia
         usuarios = data.filter(u => u.tipo === 'gestao' || u.tipo === 'psicologia');
@@ -1154,7 +1154,7 @@ async function carregarUsuarios() {
 
 async function carregarIntervencoes() {
     try {
-        const response = await fetch('https://mindfine-backend.onrender.com/api/intervencoes');
+        const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/intervencoes');
         const data = await response.json();
         if (data && data.length > 0) {
             intervencoes = data;
@@ -1174,7 +1174,7 @@ async function carregarIntervencoes() {
 
 async function gerarIntervencoesDosAlertas() {
     try {
-        const responseAlertas = await fetch('https://mindfine-backend.onrender.com/api/alertas');
+        const responseAlertas = await fetch('https://mindfine-backend-9m0y.onrender.com/api/alertas');
         const alertas = await responseAlertas.json();
         const alertasNaoResolvidos = alertas.filter(a => a.resolvido !== 1);
         
@@ -1194,7 +1194,7 @@ async function gerarIntervencoesDosAlertas() {
                 curso: getCursoCodigo(alerta.turma)
             };
             
-            await fetch('https://mindfine-backend.onrender.com/api/intervencoes', {
+            await fetch('https://mindfine-backend-9m0y.onrender.com/api/intervencoes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(novaIntervencao)
@@ -1210,7 +1210,7 @@ async function gerarIntervencoesDosAlertas() {
 
 async function salvarIntervencaoNoBackend(intervencao) {
     try {
-        const response = await fetch('https://mindfine-backend.onrender.com/api/intervencoes', {
+        const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/intervencoes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(intervencao)
@@ -1224,7 +1224,7 @@ async function salvarIntervencaoNoBackend(intervencao) {
 
 async function atualizarIntervencaoNoBackend(id, updates) {
     try {
-        const response = await fetch(`https://mindfine-backend.onrender.com/api/intervencoes/${id}`, {
+        const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/intervencoes/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updates)
@@ -1238,7 +1238,7 @@ async function atualizarIntervencaoNoBackend(id, updates) {
 
 async function deletarIntervencaoNoBackend(id) {
     try {
-        await fetch(`https://mindfine-backend.onrender.com/api/intervencoes/${id}`, {
+        await fetch(`https://mindfine-backend-9m0y.onrender.com/api/intervencoes/${id}`, {
             method: 'DELETE'
         });
         return true;
@@ -1595,7 +1595,7 @@ function atualizarBadgeAlertas() {
 
 async function buscarAlertasDoBackend() {
     try {
-        const response = await fetch('https://mindfine-backend.onrender.com/api/alertas');
+        const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/alertas');
         const alertas = await response.json();
         const ativos = alertas.filter(a => a.resolvido !== 1).length;
         

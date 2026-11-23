@@ -451,7 +451,7 @@
 
     async function carregarConversas() {
         try {
-            const response = await fetch(`https://mindfine-backend.onrender.com/api/chats?aluno=${matriculaAtual}`);
+            const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/chats?aluno=${matriculaAtual}`);
             conversas = await response.json();
             renderizarHistorico();
             
@@ -469,7 +469,7 @@
 
     async function carregarMensagens(chatId) {
         try {
-            const response = await fetch(`https://mindfine-backend.onrender.com/api/chats/${chatId}/mensagens`);
+            const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/chats/${chatId}/mensagens`);
             return await response.json();
         } catch (error) {
             return [];
@@ -478,7 +478,7 @@
 
     async function enviarMensagem(chatId, remetente, texto) {
         try {
-            await fetch(`https://mindfine-backend.onrender.com/api/chats/${chatId}/mensagens`, {
+            await fetch(`https://mindfine-backend-9m0y.onrender.com/api/chats/${chatId}/mensagens`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ remetente, texto })
@@ -488,7 +488,7 @@
 
     async function criarConversa(id, nome, anonimo) {
         try {
-            await fetch('https://mindfine-backend.onrender.com/api/chats', {
+            await fetch('https://mindfine-backend-9m0y.onrender.com/api/chats', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id, matricula_aluno: matriculaAtual, nome_aluno: nome, anonimo: anonimo ? 1 : 0 })

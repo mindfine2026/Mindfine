@@ -545,7 +545,7 @@ function createCard(m) {
 async function carregarFavoritos() {
     if (!matriculaAtual) return;
     try {
-        const response = await fetch(`https://mindfine-backend.onrender.com/api/playlist/${matriculaAtual}`);
+        const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/playlist/${matriculaAtual}`);
         const dados = await response.json();
         favoritos = dados.favoritos || [];
         renderPlaylists(); // Re-renderizar com os favoritos
@@ -556,7 +556,7 @@ async function carregarFavoritos() {
 
 async function adicionarFavorito(musicaId, titulo, artista) {
     try {
-        const response = await fetch(`https://mindfine-backend.onrender.com/api/playlist/${matriculaAtual}`, {
+        const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/playlist/${matriculaAtual}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ musica_id: musicaId, titulo: titulo, artista: artista })
@@ -577,7 +577,7 @@ async function adicionarFavorito(musicaId, titulo, artista) {
 
 async function removerFavorito(musicaId) {
     try {
-        const response = await fetch(`https://mindfine-backend.onrender.com/api/playlist/${matriculaAtual}/${musicaId}`, { method: 'DELETE' });
+        const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/playlist/${matriculaAtual}/${musicaId}`, { method: 'DELETE' });
         const result = await response.json();
         if (result.sucesso) {
             favoritos = favoritos.filter(id => id !== musicaId);

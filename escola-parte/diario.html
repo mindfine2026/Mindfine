@@ -703,7 +703,7 @@
         matriculaAtual = usuario.matricula || '123456';
         
         try {
-            const response = await fetch(`https://mindfine-backend.onrender.com/api/diario/${matriculaAtual}`);
+            const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/diario/${matriculaAtual}`);
             const dados = await response.json();
             diaryEntries = dados;
             console.log('✅ Diário carregado:', diaryEntries.length, 'entradas');
@@ -717,7 +717,7 @@
     
     async function salvarEntrada(entry) {
         try {
-            const response = await fetch(`https://mindfine-backend.onrender.com/api/diario/${matriculaAtual}`, {
+            const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/diario/${matriculaAtual}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(entry)
@@ -741,7 +741,7 @@
         document.getElementById('confirmDeleteBtn').onclick = async () => {
             document.getElementById('confirmDeleteModal').style.display = 'none';
             try {
-                const response = await fetch(`https://mindfine-backend.onrender.com/api/diario/${matriculaAtual}/${_deletePendingId}`, { method: 'DELETE' });
+                const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/diario/${matriculaAtual}/${_deletePendingId}`, { method: 'DELETE' });
                 const result = await response.json();
                 if (result.sucesso) await carregarDiario();
             } catch (error) {

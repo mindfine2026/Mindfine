@@ -564,7 +564,7 @@
     // Dados
     async function carregarEstatisticas() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/escola/estatisticas');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/escola/estatisticas');
             const dados = await response.json();
             document.getElementById('totalAlunos').textContent = dados.totalAlunos || 0;
             document.getElementById('bemEstar').textContent = dados.nivelMedio || 0;
@@ -575,7 +575,7 @@
     
     async function carregarAlertas() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/alertas');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/alertas');
             const alertas = await response.json();
             const ativos = alertas.filter(a => a.resolvido !== 1).length;
             document.getElementById('totalAlertas').textContent = ativos;
@@ -589,7 +589,7 @@
     async function carregarEmocoes() {
         try {
             const periodo = document.getElementById('filterPeriod').value;
-            const response = await fetch(`https://mindfine-backend.onrender.com/api/relatorio/emocoes?periodo=${periodo}`);
+            const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/relatorio/emocoes?periodo=${periodo}`);
             const dados = await response.json();
             
             document.getElementById('barAlegria').style.width = (dados.alegria || 0) + '%';

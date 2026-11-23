@@ -582,7 +582,7 @@
     // API Calls
     async function loadConversations() {
         try {
-            const response = await fetch('https://mindfine-backend.onrender.com/api/chats');
+            const response = await fetch('https://mindfine-backend-9m0y.onrender.com/api/chats');
             conversations = await response.json();
             renderConversations();
         } catch (error) {
@@ -594,7 +594,7 @@
 
     async function loadMessages(conversaId) {
         try {
-            const response = await fetch(`https://mindfine-backend.onrender.com/api/chats/${conversaId}/mensagens`);
+            const response = await fetch(`https://mindfine-backend-9m0y.onrender.com/api/chats/${conversaId}/mensagens`);
             return await response.json();
         } catch (error) {
             return [];
@@ -603,7 +603,7 @@
 
     async function sendMessageToBackend(conversaId, remetente, texto) {
         try {
-            await fetch(`https://mindfine-backend.onrender.com/api/chats/${conversaId}/mensagens`, {
+            await fetch(`https://mindfine-backend-9m0y.onrender.com/api/chats/${conversaId}/mensagens`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ remetente, texto })
@@ -613,13 +613,13 @@
 
     async function updateConversaStatus(conversaId, acao) {
         try {
-            await fetch(`https://mindfine-backend.onrender.com/api/chats/${conversaId}/${acao}`, { method: 'PUT' });
+            await fetch(`https://mindfine-backend-9m0y.onrender.com/api/chats/${conversaId}/${acao}`, { method: 'PUT' });
         } catch (error) { console.error(error); }
     }
 
     async function clearAllChats() {
         try {
-            await fetch('https://mindfine-backend.onrender.com/api/chats', { method: 'DELETE' });
+            await fetch('https://mindfine-backend-9m0y.onrender.com/api/chats', { method: 'DELETE' });
             await loadConversations();
             currentConversation = null;
             document.getElementById('chatHeader').style.display = 'none';
